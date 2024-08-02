@@ -1,4 +1,3 @@
-import { name as packageName } from './package.json'
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import BlurhashWebpackPlugin from 'blurhash-webpack-plugin'
 import { config } from 'dotenv'
@@ -30,12 +29,6 @@ const webpackConfig: WebpackConfiguration = {
     chunkFilename: '[id].[contenthash:8].js',
     clean: true,
     hashFunction: 'xxhash64',
-
-    // qiankun
-    library: `${packageName}-[name]`,
-    libraryTarget: 'umd',
-    chunkLoadingGlobal: `webpackJsonp_${packageName}`,
-    globalObject: 'window',
   },
   resolve: {
     extensions: ['.js', '.mjs', '.cjs', '.jsx', '.ts', '.tsx'],
