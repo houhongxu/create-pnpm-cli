@@ -3418,7 +3418,7 @@ module.exports = __toCommonJS(cli_exports);
 init_cjs_shims();
 
 // package.json
-var version = "0.0.3";
+var version = "0.0.4";
 
 // src/constants.ts
 init_cjs_shims();
