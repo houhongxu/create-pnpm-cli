@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "dev": "pnpm --recursive --parallel --filter=./packages/** dev",
+    "build": "pnpm --recursive --filter=./packages/** build"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,29 @@
+{
+  "name": "create-pnpm-cli",
+  "version": "0.0.2",
+  "description": "create pnpm cli",
+  "scripts": {
+    "dev": "tsup ./src/cli.ts --dts --clean --shims --format=esm --platform=node --outDir=./lib --watch"
+  },
+  "type": "module",
+  "main": "./lib/cli.js",
+  "module": "./lib/cli.js",
+  "types": "./lib/cli.d.ts",
+  "bin": "./bin/bin.js",
+  "files": [
+    "./lib",
+    "./bin",
+    "template"
+  ],
+  "dependencies": {
+    "@inquirer/prompts": "^5.3.6",
+    "commander": "^11.1.0",
+    "fast-glob": "^3.3.2",
+    "fs-extra": "^11.2.0",
+    "package-manager-install": "^0.0.6"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "tsup": "^8.2.3"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "examples",
+  "description": "examples",
+  "scripts": {
+    "dev": "create-pnpm-cli"
+  },
+  "devDependencies": {
+    "create-pnpm-cli": "workspace:*"
+  }
+}
