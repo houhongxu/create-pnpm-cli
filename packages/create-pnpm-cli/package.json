@@ -8,7 +8,7 @@
   "type": "module",
   "main": "./lib/cli.cjs",
   "types": "./lib/cli.d.cts",
-  "bin": "./bin/bin.js",
+  "bin": "./bin/index.js",
   "files": [
     "./lib",
     "./bin",
