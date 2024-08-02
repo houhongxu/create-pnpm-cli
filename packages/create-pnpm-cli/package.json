@@ -1,6 +1,6 @@
 {
   "name": "create-pnpm-cli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "create pnpm cli",
   "scripts": {
     "dev": "tsup ./src/cli.ts --dts --clean --shims --format=cjs --platform=node --outDir=./lib --watch"
