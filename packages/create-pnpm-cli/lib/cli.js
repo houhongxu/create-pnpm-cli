@@ -38,7 +38,7 @@ import packageManagerInstall from "package-manager-install";
 import path3 from "path";
 var cli = program;
 cli.name("create-pnpm-cli").version(version);
-cli.command("create", { isDefault: true }).description("create pnpm cli").action(async () => {
+cli.command("create", { isDefault: true }).description("create pnpm cli").argument("[path]", "path to mkdir", "./").action(async (targetPath) => {
   const names = await glob(`**`, {
     deep: 1,
     cwd: TEMPLATE_PATH,
@@ -52,9 +52,10 @@ cli.command("create", { isDefault: true }).description("create pnpm cli").action
     message: "\u8BF7\u8F93\u5165\u5305\u540D",
     default: template
   });
-  fse.mkdir(name).catch((err) => handleError(err, "\u521B\u5EFA\u6587\u4EF6\u5939\u9519\u8BEF"));
-  fse.copy(path3.join(TEMPLATE_PATH, template), name).catch((err) => handleError(err, "\u62F7\u8D1D\u6587\u4EF6\u9519\u8BEF"));
-  packageManagerInstall({ cwd: name });
+  const target = path3.join(targetPath, name);
+  await fse.ensureDir(target).catch((err) => handleError(err, "\u6587\u4EF6\u5939\u4E0D\u5B58\u5728"));
+  await fse.copy(path3.join(TEMPLATE_PATH, template), target).catch((err) => handleError(err, "\u62F7\u8D1D\u6587\u4EF6\u9519\u8BEF"));
+  await packageManagerInstall({ cwd: target });
 });
 cli.parse();
 export {

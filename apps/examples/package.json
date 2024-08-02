@@ -2,7 +2,7 @@
   "name": "examples",
   "description": "examples",
   "scripts": {
-    "dev": "create-pnpm-cli"
+    "dev": "create-pnpm-cli hhx"
   },
   "devDependencies": {
     "create-pnpm-cli": "workspace:*"

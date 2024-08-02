@@ -1,9 +1,7 @@
 import { version } from '../package.json'
-import { PACKAGE_CHOICES, PACKAGE_MAP, TEMPLATE_PATH } from './constants'
-import { PACKAGE_ENUM } from './types'
+import { TEMPLATE_PATH } from './constants'
 import { handleError } from './utils'
-import { Separator, checkbox, input, select } from '@inquirer/prompts'
-import { exec, spawn } from 'child_process'
+import { input, select } from '@inquirer/prompts'
 import { program } from 'commander'
 import glob from 'fast-glob'
 import fse from 'fs-extra'
@@ -19,7 +17,8 @@ cli.name('create-pnpm-cli').version(version)
 cli
   .command('create', { isDefault: true })
   .description('create pnpm cli') // 单独使用description才使命令参数生效
-  .action(async () => {
+  .argument('[path]', 'path to mkdir', './')
+  .action(async (targetPath) => {
     // 选择模板
     const names = await glob(`**`, {
       deep: 1,
@@ -39,10 +38,12 @@ cli
     })
 
     // 创建文件夹 拷贝文件
-    fse.mkdir(name).catch((err) => handleError(err, '创建文件夹错误'))
+    const target = path.join(targetPath, name)
 
-    fse
-      .copy(path.join(TEMPLATE_PATH, template), name)
+    await fse.ensureDir(target).catch((err) => handleError(err, '文件夹不存在'))
+
+    await fse
+      .copy(path.join(TEMPLATE_PATH, template), target)
       .catch((err) => handleError(err, '拷贝文件错误'))
 
     // 选择包 安装包
@@ -51,7 +52,7 @@ cli
     //   choices: PACKAGE_CHOICES,
     // })
 
-    packageManagerInstall({ cwd: name })
+    await packageManagerInstall({ cwd: target })
   })
 
 cli.parse()
