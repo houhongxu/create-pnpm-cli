@@ -1,0 +1,21 @@
+{
+  "name": "zeropress",
+  "description": "",
+  "scripts": {
+    "build": "zeropress build",
+    "serve": "npm run build && serve ./dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "zeropress": "^0.0.24",
+    "serve": "^14.2.1"
+  }
+}
