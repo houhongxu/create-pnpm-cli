@@ -3,7 +3,7 @@ import path from 'path'
 
 export const ROOT_PATH = path.join(__dirname, '..', '..', '..')
 
-export const TEMPLATE_PATH = path.join(ROOT_PATH, 'template')
+export const TEMPLATE_PATH = path.join(ROOT_PATH, 'templates')
 
 // 模板仓库配置
 export const TEMPLATE_REPO_URL = 'https://github.com/houhongxu/create-pnpm-cli'

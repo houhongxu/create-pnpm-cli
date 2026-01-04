@@ -40,7 +40,7 @@ var version = "0.0.11";
 // src/constants.ts
 var import_path = __toESM(require("path"), 1);
 var ROOT_PATH = import_path.default.join(__dirname, "..", "..", "..");
-var TEMPLATE_PATH = import_path.default.join(ROOT_PATH, "template");
+var TEMPLATE_PATH = import_path.default.join(ROOT_PATH, "templates");
 var TEMPLATE_REPO_URL = "https://github.com/houhongxu/create-pnpm-cli";
 var PACKAGE_CHOICES = [
   "prettier" /* prettier */
