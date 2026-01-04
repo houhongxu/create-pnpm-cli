@@ -3,7 +3,8 @@
   "version": "0.0.11",
   "description": "create pnpm cli",
   "scripts": {
-    "dev": "tsup ./src/cli.ts --dts --clean --shims --format=cjs --platform=node --outDir=./lib --watch"
+    "dev": "tsup ./src/cli.ts --dts --clean --shims --format=cjs --platform=node --outDir=./lib --watch",
+    "build": "tsup ./src/cli.ts --dts --clean --shims --format=cjs --platform=node --outDir=./lib"
   },
   "type": "module",
   "main": "./lib/cli.cjs",

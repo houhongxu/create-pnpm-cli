@@ -35,12 +35,13 @@ __export(cli_exports, {
 module.exports = __toCommonJS(cli_exports);
 
 // package.json
-var version = "0.0.4";
+var version = "0.0.11";
 
 // src/constants.ts
 var import_path = __toESM(require("path"), 1);
-var ROOT_PATH = import_path.default.join(__dirname, "..");
+var ROOT_PATH = import_path.default.join(__dirname, "..", "..", "..");
 var TEMPLATE_PATH = import_path.default.join(ROOT_PATH, "template");
+var TEMPLATE_REPO_URL = "https://github.com/houhongxu/create-pnpm-cli";
 var PACKAGE_CHOICES = [
   "prettier" /* prettier */
 ].map((item) => ({ name: item, value: item }));
@@ -52,19 +53,60 @@ var PACKAGE_MAP = {
 };
 
 // src/utils.ts
+var import_child_process = require("child_process");
+var import_fs_extra = __toESM(require("fs-extra"), 1);
+var import_os = __toESM(require("os"), 1);
+var import_path2 = __toESM(require("path"), 1);
 var import_process = require("process");
 function handleError(err, message) {
   console.log(message + "\uFF1A", err);
   (0, import_process.exit)(1);
+}
+function getTempDir() {
+  return import_path2.default.join(import_os.default.tmpdir(), "repositories");
+}
+function cloneRepository(repoUrl, targetPath) {
+  const gitRepoUrl = repoUrl.endsWith(".git") ? repoUrl : `${repoUrl}.git`;
+  (0, import_child_process.execSync)(
+    `git clone --depth 1 --branch main "${gitRepoUrl}" "${targetPath}"`,
+    {
+      stdio: "inherit"
+    }
+  );
+}
+async function fetchTemplateFromRepo(repoUrl, templateName) {
+  const tempDir = getTempDir();
+  const [gitRepoUrl] = repoUrl.split("#");
+  const repoTempPath = import_path2.default.join(
+    tempDir,
+    gitRepoUrl.split("/").pop()?.replace(".git", "") || "unknown"
+  );
+  const templateTempPath = import_path2.default.join(repoTempPath, "templates", templateName);
+  await import_fs_extra.default.ensureDir(tempDir);
+  if (await import_fs_extra.default.pathExists(repoTempPath)) {
+    await import_fs_extra.default.remove(repoTempPath);
+  }
+  try {
+    cloneRepository(gitRepoUrl, repoTempPath);
+    if (!await import_fs_extra.default.pathExists(templateTempPath)) {
+      throw new Error(
+        `\u6A21\u677F\u76EE\u5F55\u4E0D\u5B58\u5728: templates/${templateName}\uFF0C\u8BF7\u68C0\u67E5\u4ED3\u5E93\u4E2D\u662F\u5426\u5B58\u5728\u8BE5\u6A21\u677F`
+      );
+    }
+    return templateTempPath;
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    throw new Error(`\u4ECE\u4ED3\u5E93\u62C9\u53D6\u6A21\u677F\u5931\u8D25: ${repoUrl}\u3002\u9519\u8BEF\u4FE1\u606F: ${errorMessage}`);
+  }
 }
 
 // src/cli.ts
 var import_prompts = require("@inquirer/prompts");
 var import_commander = require("commander");
 var import_fast_glob = __toESM(require("fast-glob"), 1);
-var import_fs_extra = __toESM(require("fs-extra"), 1);
+var import_fs_extra2 = __toESM(require("fs-extra"), 1);
 var import_package_manager_install = __toESM(require("package-manager-install"), 1);
-var import_path2 = __toESM(require("path"), 1);
+var import_path3 = __toESM(require("path"), 1);
 var cli = import_commander.program;
 cli.name("create-pnpm-cli").version(version);
 cli.command("create", { isDefault: true }).description("create pnpm cli").argument("[path]", "path to mkdir", "./").action(async (targetPath) => {
@@ -81,9 +123,21 @@ cli.command("create", { isDefault: true }).description("create pnpm cli").argume
     message: "\u8BF7\u8F93\u5165\u5305\u540D",
     default: template
   });
-  const target = import_path2.default.join(targetPath, name);
-  await import_fs_extra.default.ensureDir(target).catch((err) => handleError(err, "\u6587\u4EF6\u5939\u4E0D\u5B58\u5728"));
-  await import_fs_extra.default.copy(import_path2.default.join(TEMPLATE_PATH, template), target).catch((err) => handleError(err, "\u62F7\u8D1D\u6587\u4EF6\u9519\u8BEF"));
+  console.log("\u6B63\u5728\u4ECE\u4ED3\u5E93\u62C9\u53D6\u6A21\u677F...");
+  let templateTempPath;
+  try {
+    templateTempPath = await fetchTemplateFromRepo(
+      TEMPLATE_REPO_URL,
+      template
+    );
+  } catch (err) {
+    handleError(err, "\u62C9\u53D6\u6A21\u677F\u5931\u8D25");
+    return;
+  }
+  const target = import_path3.default.join(targetPath, name);
+  await import_fs_extra2.default.ensureDir(target).catch((err) => handleError(err, "\u521B\u5EFA\u6587\u4EF6\u5939\u5931\u8D25"));
+  console.log("\u6B63\u5728\u62F7\u8D1D\u6587\u4EF6...");
+  await import_fs_extra2.default.copy(templateTempPath, target).catch((err) => handleError(err, "\u62F7\u8D1D\u6587\u4EF6\u9519\u8BEF"));
   await (0, import_package_manager_install.default)({ cwd: target });
 });
 cli.parse();
